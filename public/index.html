@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CCTC Lost & Found</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =====================================================
+       NAVBAR
+  ===================================================== -->
+
+  <nav class="navbar">
+
+    <button
+      class="brand"
+      onclick="showPage('dashboard')"
+    >
+
+      <div class="brand-logo">
+        C
+      </div>
+
+      <div class="brand-text">
+        <strong>CCTC Lost & Found</strong>
+        <span>Student Lost & Found Portal</span>
+      </div>
+
+    </button>
+
+
+    <div class="nav-links">
+
+      <button
+        class="nav-link active"
+        data-page="dashboard"
+        onclick="showPage('dashboard')"
+      >
+        Dashboard
+      </button>
+
+      <button
+        class="nav-link"
+        data-page="items"
+        onclick="showPage('items')"
+      >
+        Find Items
+      </button>
+
+      <button
+        class="nav-link"
+        data-page="history"
+        onclick="showPage('history')"
+      >
+        My History
+      </button>
+
+      <button
+        class="nav-link"
+        data-page="profile"
+        onclick="showPage('profile')"
+      >
+        Profile
+      </button>
+
+    </div>
+
+
+    <div class="nav-actions">
+
+      <button
+        class="icon-button"
+        onclick="toggleTheme()"
+        id="themeButton"
+      >
+        ☾
+      </button>
+
+      <button
+        class="auth-button"
+        id="authButton"
+        onclick="openAuth('login')"
+      >
+        Sign In
+      </button>
+
+      <button
+        class="report-button"
+        id="reportButton"
+        onclick="openReportModal()"
+      >
+        + Report Item
+      </button>
+
+      <button
+        class="profile-button"
+        id="profileButton"
+        onclick="showPage('profile')"
+        style="display:none"
+      >
+        ?
+      </button>
+
+    </div>
+
+  </nav>
+
+
+  <!-- =====================================================
+       HERO / SEARCH
+  ===================================================== -->
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <div class="hero-badge">
+
+        <span class="pulse"></span>
+
+        CCTC Campus Lost & Found
+
+      </div>
+
+
+      <h1>
+
+        Lost something?
+
+        <br>
+
+        <span>Let's find it.</span>
+
+      </h1>
+
+
+      <p>
+
+        Search items reported by students and staff around
+        CCTC. Check when an item was reported and whether
+        it has already been claimed.
+
+      </p>
+
+
+      <div class="search-container">
+
+        <div class="search-icon">
+          🔎
+        </div>
+
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search for wallet, ID, headphones..."
+        >
+
+        <button
+          class="search-button"
+          onclick="performSearch()"
+        >
+          Search
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       MAIN
+  ===================================================== -->
+
+  <main class="main">
+
+
+    <!-- =================================================
+         DASHBOARD
+    ================================================== -->
+
+    <section
+      class="page-section active"
+      id="dashboardPage"
+    >
+
+      <div class="welcome-card">
+
+        <small>
+          CCTC LOST & FOUND
+        </small>
+
+        <h2 id="welcomeText">
+          Welcome to CCTC Lost & Found
+        </h2>
+
+        <p>
+          Find your missing belongings or check recent
+          campus activity.
+        </p>
+
+      </div>
+
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📦
+          </div>
+
+          <div
+            class="stat-number"
+            id="totalItems"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Total reported items
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            🔎
+          </div>
+
+          <div
+            class="stat-number"
+            id="unclaimedItems"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Still unclaimed
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            ✓
+          </div>
+
+          <div
+            class="stat-number"
+            id="claimedItems"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Successfully claimed
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📅
+          </div>
+
+          <div
+            class="stat-number"
+            id="todayReports"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Reported today
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="activity-card">
+
+        <div class="activity-header">
+
+          <h3>
+            Recent Campus Activity
+          </h3>
+
+          <p>
+            Everyone can see the reporting and claiming
+            activity of listed items.
+          </p>
+
+        </div>
+
+        <div id="activityList"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         FIND ITEMS
+    ================================================== -->
+
+    <section
+      class="page-section"
+      id="itemsPage"
+    >
+
+      <div class="section-header">
+
+        <h2>
+          Find an Item
+        </h2>
+
+        <p id="resultText">
+          Browse items reported around CCTC.
+        </p>
+
+      </div>
+
+
+      <div class="filters">
+
+        <select
+          class="filter"
+          id="categoryFilter"
+        >
+
+          <option value="">
+            All Categories
+          </option>
+
+          <option value="Electronics">
+            Electronics
+          </option>
+
+          <option value="Personal">
+            Personal
+          </option>
+
+          <option value="School">
+            School
+          </option>
+
+          <option value="Accessories">
+            Accessories
+          </option>
+
+          <option value="Clothing">
+            Clothing
+          </option>
+
+        </select>
+
+
+        <select
+          class="filter"
+          id="locationFilter"
+        >
+
+          <option value="">
+            All Locations
+          </option>
+
+          <option value="Library">
+            Library
+          </option>
+
+          <option value="Cafeteria">
+            Cafeteria
+          </option>
+
+          <option value="Computer Laboratory">
+            Computer Laboratory
+          </option>
+
+          <option value="Gymnasium">
+            Gymnasium
+          </option>
+
+          <option value="Main Building">
+            Main Building
+          </option>
+
+        </select>
+
+
+        <select
+          class="filter"
+          id="statusFilter"
+        >
+
+          <option value="">
+            Any Status
+          </option>
+
+          <option value="Unclaimed">
+            Unclaimed
+          </option>
+
+          <option value="Claimed">
+            Claimed
+          </option>
+
+        </select>
+
+
+        <button
+          class="clear-filter"
+          onclick="clearFilters()"
+        >
+          Clear filters
+        </button>
+
+      </div>
+
+
+      <div
+        class="items-grid"
+        id="itemsGrid"
+      ></div>
+
+
+      <div
+        class="empty-state"
+        id="emptyState"
+      >
+
+        <div class="empty-icon">
+          🔍
+        </div>
+
+        <h3>
+          No items found
+        </h3>
+
+        <p>
+          Try changing your search or filters.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         HISTORY
+    ================================================== -->
+
+    <section
+      class="page-section"
+      id="historyPage"
+    >
+
+      <div class="section-header">
+
+        <h2>
+          My History
+        </h2>
+
+        <p>
+          Your reported and claimed items.
+        </p>
+
+      </div>
+
+
+      <div
+        class="history-list"
+        id="historyList"
+      ></div>
+
+    </section>
+
+
+    <!-- =================================================
+         PROFILE
+    ================================================== -->
+
+    <section
+      class="page-section"
+      id="profilePage"
+    >
+
+      <div class="section-header">
+
+        <h2>
+          My Profile
+        </h2>
+
+        <p>
+          Your CCTC student account.
+        </p>
+
+      </div>
+
+
+      <div class="profile-layout">
+
+        <div class="profile-card">
+
+          <div
+            class="large-avatar"
+            id="largeAvatar"
+          >
+            ?
+          </div>
+
+          <h3 id="profileName">
+            Guest Student
+          </h3>
+
+          <p id="profileId">
+            Sign in to view your account
+          </p>
+
+          <br>
+
+          <button
+            class="logout-button"
+            id="logoutButton"
+            onclick="logout()"
+            style="display:none"
+          >
+            Sign Out
+          </button>
+
+        </div>
+
+
+        <div class="profile-info">
+
+          <div class="profile-info-header">
+
+            <h3>
+              Student Information
+            </h3>
+
+          </div>
+
+
+          <div class="profile-row">
+
+            <span>
+              School ID
+            </span>
+
+            <span id="infoId">
+              —
+            </span>
+
+          </div>
+
+
+          <div class="profile-row">
+
+            <span>
+              Full Name
+            </span>
+
+            <span id="infoName">
+              —
+            </span>
+
+          </div>
+
+
+          <div class="profile-row">
+
+            <span>
+              Section
+            </span>
+
+            <span id="infoSection">
+              —
+            </span>
+
+          </div>
+
+
+          <div class="profile-row">
+
+            <span>
+              School Year
+            </span>
+
+            <span id="infoYear">
+              —
+            </span>
+
+          </div>
+
+
+          <div class="profile-row">
+
+            <span>
+              Account Created
+            </span>
+
+            <span id="infoCreated">
+              —
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       AUTH MODAL
+  ===================================================== -->
+
+  <div
+    class="overlay"
+    id="authOverlay"
+  >
+
+    <div class="auth-card">
+
+      <button
+        class="close-auth"
+        onclick="closeAuth()"
+      >
+        ×
+      </button>
+
+
+      <!-- LOGIN -->
+
+      <div id="loginForm">
+
+        <div class="auth-header">
+
+          <div class="auth-logo">
+            C
+          </div>
+
+          <h2>
+            Welcome Back
+          </h2>
+
+          <p>
+            Sign in to your CCTC Lost & Found account.
+          </p>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            School ID
+          </label>
+
+          <input
+            class="form-input"
+            id="loginSchoolId"
+            placeholder="Enter your school ID"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Password
+          </label>
+
+          <input
+            class="form-input"
+            id="loginPassword"
+            type="password"
+            placeholder="Enter your password"
+          >
+
+        </div>
+
+
+        <button
+          class="primary-form-button"
+          onclick="login()"
+        >
+          Sign In
+        </button>
+
+
+        <div class="auth-switch">
+
+          Don't have an account?
+
+          <button
+            onclick="switchAuth('signup')"
+          >
+            Create one
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SIGN UP -->
+
+      <div
+        id="signupForm"
+        style="display:none"
+      >
+
+        <div class="auth-header">
+
+          <div class="auth-logo">
+            C
+          </div>
+
+          <h2>
+            Create Account
+          </h2>
+
+          <p>
+            Use your official CCTC student information.
+          </p>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            School ID *
+          </label>
+
+          <input
+            class="form-input"
+            id="signupSchoolId"
+            placeholder="e.g. CCTC-2026-001"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Full Name *
+          </label>
+
+          <input
+            class="form-input"
+            id="signupName"
+            placeholder="Enter your full name"
+          >
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>
+              Section *
+            </label>
+
+            <input
+              class="form-input"
+              id="signupSection"
+              placeholder="e.g. BSIT-2A"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              School Year *
+            </label>
+
+            <select
+              class="form-input"
+              id="signupYear"
+            >
+
+              <option value="">
+                Select year
+              </option>
+
+              <option>
+                2025-2026
+              </option>
+
+              <option>
+                2026-2027
+              </option>
+
+              <option>
+                2027-2028
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Password *
+          </label>
+
+          <input
+            class="form-input"
+            id="signupPassword"
+            type="password"
+            placeholder="Create a password"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Confirm Password *
+          </label>
+
+          <input
+            class="form-input"
+            id="signupConfirmPassword"
+            type="password"
+            placeholder="Repeat your password"
+          >
+
+        </div>
+
+
+        <button
+          class="primary-form-button"
+          onclick="signup()"
+        >
+          Create CCTC Account
+        </button>
+
+
+        <div class="auth-switch">
+
+          Already have an account?
+
+          <button
+            onclick="switchAuth('login')"
+          >
+            Sign in
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ITEM MODAL
+  ===================================================== -->
+
+  <div
+    class="overlay"
+    id="itemOverlay"
+    onclick="closeItemOutside(event)"
+  >
+
+    <div class="item-modal">
+
+      <button
+        class="close-modal"
+        onclick="closeItemModal()"
+      >
+        ×
+      </button>
+
+
+      <div class="item-modal-grid">
+
+        <div class="modal-image">
+
+          <img
+            id="modalImage"
+            src=""
+            alt=""
+          >
+
+        </div>
+
+
+        <div class="modal-details">
+
+          <div
+            class="modal-category"
+            id="modalCategory"
+          ></div>
+
+
+          <h2 id="modalTitle"></h2>
+
+
+          <p
+            class="modal-description"
+            id="modalDescription"
+          ></p>
+
+
+          <div class="detail-list">
+
+            <div class="detail-row">
+
+              <span>
+                📍 Found at
+              </span>
+
+              <span id="modalLocation">
+                —
+              </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+              <span>
+                📅 Reported
+              </span>
+
+              <span id="modalReported">
+                —
+              </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+              <span>
+                ✓ Claimed
+              </span>
+
+              <span id="modalClaimed">
+                Not claimed
+              </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+              <span>
+                🔖 Status
+              </span>
+
+              <span id="modalStatus">
+                —
+              </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+              <span>
+                🆔 Item ID
+              </span>
+
+              <span id="modalId">
+                —
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="claim-button"
+            id="claimButton"
+            onclick="claimCurrentItem()"
+          >
+            This is my item
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       REPORT ITEM MODAL
+  ===================================================== -->
+
+  <div
+    class="overlay"
+    id="reportOverlay"
+    onclick="closeReportOutside(event)"
+  >
+
+    <div class="report-card">
+
+      <button
+        class="close-auth"
+        onclick="closeReportModal()"
+      >
+        ×
+      </button>
+
+      <div class="report-header">
+        <h2>Report a Lost Item</h2>
+        <p>Help others find items they've lost around campus.</p>
+      </div>
+
+      <div class="form-group">
+        <label>Item Name *</label>
+        <input
+          class="form-input"
+          id="reportName"
+          placeholder="e.g. Black Wallet, Silver Laptop"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Category *</label>
+        <select class="form-input" id="reportCategory">
+          <option value="">Select a category</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Personal">Personal</option>
+          <option value="School">School</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Clothing">Clothing</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Location Found *</label>
+        <select class="form-input" id="reportLocation">
+          <option value="">Select a location</option>
+          <option value="Library">Library</option>
+          <option value="Cafeteria">Cafeteria</option>
+          <option value="Computer Laboratory">Computer Laboratory</option>
+          <option value="Gymnasium">Gymnasium</option>
+          <option value="Main Building">Main Building</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea
+          class="form-input"
+          id="reportDescription"
+          placeholder="Describe the item (color, brand, distinctive features, etc.)"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="reportPhoto">Item Photo (optional)</label>
+        <input
+          class="form-input"
+          id="reportPhoto"
+          type="file"
+          accept="image/*"
+          onchange="previewReportPhoto(event)"
+        >
+        <img id="reportPhotoPreview" class="report-photo-preview" alt="Selected item photo preview" hidden>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Date Found *</label>
+          <input
+            class="form-input"
+            id="reportDate"
+            type="date"
+          >
+        </div>
+        <div class="form-group">
+          <label>Contact Email *</label>
+          <input
+            class="form-input"
+            id="reportEmail"
+            type="email"
+            placeholder="your.email@cctc.edu"
+          >
+        </div>
+      </div>
+
+      <button
+        class="primary-form-button"
+        onclick="submitReport()"
+      >
+        Report Item
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TOAST
+  ===================================================== -->
+
+  <div
+    class="toast"
+    id="toast"
+  ></div>
+
+
+  <script src="script.js"></script>
+  <script src="api.js"></script>
+
+</body>
+</html>
